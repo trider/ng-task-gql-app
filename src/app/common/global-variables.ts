@@ -1,3 +1,3 @@
 export class GlobalVariables {
-		public static appVersion: string = '0.1.2'
+		public static appVersion: string = '0.1.3'
 } 
