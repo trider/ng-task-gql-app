@@ -1,0 +1,26 @@
+<!-- <nav class="navbar navbar-expand-lg bg-body-tertiary "> -->
+<app-navbar></app-navbar>
+
+
+<div class="container-fluid container-lg d-lg-flex">
+
+
+    <table class="table table-striped" style="padding: 25px;">
+      <thead>
+        <tr>
+          <th *ngFor="let item of tableCols" scope="col">{{item|titlecase}}</th>
+    
+        </tr>
+      </thead>
+      <tbody>
+          <tr *ngFor="let task of tasks">
+            <td *ngFor="let item of tableCols">{{task[item]}}</td>
+          </tr>
+        
+      </tbody>
+    </table>
+
+
+</div>
+
+<app-table [tableData]="tasks" [tableCols]="tableCols"></app-table>

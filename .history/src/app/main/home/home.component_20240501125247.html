@@ -1,0 +1,10 @@
+<app-navbar></app-navbar>
+<div class="container container-lg"  style="padding: 10px">
+  <app-table 
+  *ngIf="tasks" 
+  [tableData]="tasks" 
+  [tableCols]="tableCols"
+  >
+  </app-table>
+</div>
+

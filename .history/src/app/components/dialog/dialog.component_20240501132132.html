@@ -1,0 +1,284 @@
+
+
+
+<div cdkDrag cdkDragRootElement=".cdk-overlay-pane"></div>
+
+
+<h5 mat-dialog-title class="card-title" >
+ <!-- data.showTitle ||  -->
+ <span *ngIf="data.controlType!=='approval' && data.controlType!=='pricing'|| data.controlType==='details' || 
+   data.controlType==='upload'|| data.controlType==='dlt' || data.controlType==='transfer' || data.controlType==='filter' || 
+   data.controlType==='analytics' || data.controlType==='adjustments' || data.controlType==='valuations'
+ || data.controlType==='payouts'  || data.controlType==='dltMember'|| data.dialogType==='wizardBase' ||
+   data.controlType==='assetProfile'" >
+   {{data.title}}
+ </span>
+ <span *ngIf="data.controlType==='allocations'">{{data.controlType|titlecase}}: {{data.title}}</span>
+ <span *ngIf="data.controlType==='notification'">{{data.title}} <i class="fe-info" (click)="openModal(content, data.row)"></i></span>
+
+ <span *ngIf="data.controlType==='approval' && rowData" >Approve:
+   <span *ngIf="rowData.ticketName">{{rowData.ticketName}}</span>
+   <span *ngIf="!rowData.ticketName">{{data.title}}</span>
+   
+   <i class="fe-info" (click)="openModal(content, rowData)"></i>
+ </span>
+ <span *ngIf="data.controlType==='pricing'" >Approve:{{rowData.ticketName}} <i class="fe-info" (click)="openModal(content, rowData)"></i></span>
+</h5>
+
+<mat-dialog-content  >
+ <app-tables-basic-info-table *ngIf="data.controlType==='details'" [row]="data.row" [logRow]=true [rowName]="rowName"></app-tables-basic-info-table>
+
+ <app-dialog-control-risk-report *ngIf="data.controlType==='showRiskReport'" [data]="data"></app-dialog-control-risk-report>
+ <app-dialog-controls-upload-file
+ *ngIf="data.controlType==='upload'"
+ [data]="data"
+ [memberData]="memberData"
+ [description]="data.description" 
+ (fileUploadedEvent)="fileUpload($event)"
+ >
+ </app-dialog-controls-upload-file>
+ <div *ngIf="data.controlType==='view'" >
+   <h2 *ngIf="!fileUrl" class="text-center">
+   <span class="spinner-border spinner-border" role="status" aria-hidden="true" ></span>
+ </h2>
+
+
+   <ngx-doc-viewer 
+   *ngIf="fileUrl"
+   [url]="fileUrl"
+   viewer="pdf"
+   style="width:100%;height:50vh;"
+   >
+   </ngx-doc-viewer>
+
+ </div>
+ <div *ngIf="data.controlType==='delete'" >
+   
+   <h2 class="text-center" *ngIf="deletingRequest">
+   <span class="spinner-border spinner-border" role="status" aria-hidden="true" ></span>
+   Deleting <div *ngIf="file">{{file.name}}</div>
+ </h2>
+
+ </div>
+ <div class="card" *ngIf="data.controlType==='results'">
+   <!-- <div class="card-header">{{data.title}} </div> -->
+   <div class="card-body">
+     <ngb-accordion #acc="ngbAccordion" style="margin:5px">
+       <ngb-panel cardClass="mb-1" *ngFor="let item of data.row;index as i" >
+         <ng-template ngbPanelTitle >Step {{i}}</ng-template>
+         <ng-template ngbPanelContent>
+           <app-tables-basic-info-table [showButton]=false [showHeader]=false [row]="item" [logRow]=true [rowName]="rowName"></app-tables-basic-info-table>
+           
+         </ng-template>
+       
+       </ngb-panel>
+     </ngb-accordion>
+
+   </div>
+ </div>
+ <div *ngIf="data.controlType==='transfer'" >
+   <h2 *ngIf="!data" class="text-center">
+     <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" ></span>
+   </h2>
+
+   <app-dialog-controls-member-transfer-accounts 
+     *ngIf="data" 
+     [data]="data"
+     (addCurrencyCodeEvent)="addCurrencyCode($event)"
+     (closeEvent)="closeDialog($event)"
+     >
+   </app-dialog-controls-member-transfer-accounts>
+ </div>
+ <app-tables-basic-info-table 
+ *ngIf="data.controlType==='holdings'||data.controlType==='filters'" 
+ [showButton]="false" 
+ [row]="data.row" 
+ [logRow]=true 
+ [rowName]="rowName"
+ >
+ </app-tables-basic-info-table>
+ <app-dialog-controls-corda-transactions
+  *ngIf="data.controlType==='showDLTTransactions'"
+  [data]="data" 
+  (closeEvent)="closeDialog($event)"
+ >
+ </app-dialog-controls-corda-transactions>
+ <app-tables-standard-table  
+ *ngIf="data.controlType==='members'"
+ [baseCols]="data.baseTableCols" 
+ [isCompact]="true"
+ [tableData]="data.members" 
+ >
+ </app-tables-standard-table>
+ <app-dialog-controls-activity 
+ *ngIf="data.controlType==='activity'" 
+ [data]="data" 
+ >
+ </app-dialog-controls-activity>
+ <app-dialog-controls-operator-preferences 
+ *ngIf="data.controlType==='updateOperatorPreference'" 
+ [data]="data.row"  
+ (closeEvent)="closeDialog($event)"
+ >
+</app-dialog-controls-operator-preferences>
+ <app-dialog-controls-filter-form 
+ *ngIf="data.controlType==='filter'"
+ [data]="data"
+ (closeEvent)="closeDialog($event)"
+ (sendFilterEvent)="sendAnalysisAction($event)"
+ >
+ </app-dialog-controls-filter-form>
+ <app-dialog-controls-analytics-form
+ *ngIf="data.controlType==='analytics'" 
+   [data]="data"
+   (sendAnalysisActionEvent)="sendAnalysisAction($event)"
+   (closeEvent)="closeDialog($event)"
+ >
+ </app-dialog-controls-analytics-form>
+ <app-dialog-controls-adjustments-form
+ *ngIf="data.controlType==='adjustments'"
+ [data]="data"
+ (sendAdjustmentEvent)="sendAdjustmentAction($event)"
+ (closeEvent)="closeDialog($event)"
+ >
+ </app-dialog-controls-adjustments-form>
+ <app-operator-member-controls-analyses-adjustment
+   *ngIf="data.controlType==='adjustment'"
+   [data]="data"
+   >
+ </app-operator-member-controls-analyses-adjustment>
+ <app-dialog-controls-analysis-loan-adjustments 
+ *ngIf="data.controlType==='showVectorCurve'" 
+ [data]="data">
+ </app-dialog-controls-analysis-loan-adjustments>
+ <app-dialog-controls-valuations-form
+ *ngIf="data.controlType==='valuations'"
+ [data]="data"
+ (sendValuationActionEvent)="sendValuationAction($event)"
+ (closeEvent)="closeDialog($event)"
+ >
+ </app-dialog-controls-valuations-form>
+ <app-dialog-controls-member-dlt
+ *ngIf="data.controlType==='dltMember'"
+ [data]="data" 
+ (closeEvent)="closeDialog($event)"
+ (cancelEvent)="cancelDialog($event)"
+ >
+ </app-dialog-controls-member-dlt>
+ <app-wizards-controls-base
+ *ngIf="data.dialogType==='wizardBase'"
+ [data]="data" 
+ (closeEvent)="closeDialog($event)"
+ (cancelEvent)="cancelDialog($event)"
+ >
+ </app-wizards-controls-base>
+ <div *ngIf="data.controlType==='notification'" >
+   <h2 *ngIf="!data" class="text-center">
+     <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" ></span>
+   </h2>
+   <div *ngIf="data">
+     <app-member-controls-notification-forms-registration  *ngIf="data.title ==='Registration'" [data]="data.row" ></app-member-controls-notification-forms-registration>
+     <app-member-controls-notification-forms-wallet-create *ngIf="data.title.includes('Wallet Creation')" [data]="data.row"></app-member-controls-notification-forms-wallet-create>
+     <app-member-controls-notification-forms-wallet-transfer *ngIf="rowData.ticketName==='Pay with Yahad'" [data]="data"></app-member-controls-notification-forms-wallet-transfer>
+     <app-operator-approval-controls-wallet-withdraw *ngIf="data.title.includes('Withdrawal')" [data]="data"></app-operator-approval-controls-wallet-withdraw>
+     <app-member-controls-notification-forms-invoice-financing  *ngIf="data.title==='Invoice Financing: Approved'||data.title==='Invoice Financing Request Received'"  [data]="data"></app-member-controls-notification-forms-invoice-financing>
+     <app-member-controls-notification-forms-invoice-repayment *ngIf="data.title.includes('Pay')" [data]="data.row"></app-member-controls-notification-forms-invoice-repayment>
+   
+   
+   </div>
+ </div>
+ <app-dialog-controls-operator-product-set *ngIf="data.controlType==='productSet'"  [data]="data" (closeEvent)="closeDialog($event)"></app-dialog-controls-operator-product-set>
+ <div *ngIf="data.controlType==='payouts'" >
+   <app-dialog-controls-operator-payouts 
+   *ngIf="data.payoutType==='loans'"
+   [title]="data.title"
+   [data]="data" 
+   (closeEvent)="closeDialog($event)"
+   >
+   </app-dialog-controls-operator-payouts>
+   <app-dialog-control-operator-payout-products
+   *ngIf="data.payoutType!=='loans'"   
+   [title]="data.title"
+   [data]="data"  
+   (closeEvent)="closeDialog($event)"
+   >
+   </app-dialog-control-operator-payout-products>
+ </div>
+ <app-tables-standard-table  
+ *ngIf="data.controlType==='allocations'" 
+ [baseCols]="data.baseTableCols" 
+ [isCompact]="true"
+ [tableData]="data.row" 
+ >
+ </app-tables-standard-table>
+ <app-tables-standard-table  
+ *ngIf="data.controlType==='transactions'"
+ [baseCols]="data.baseTableCols" 
+ [isCompact]="true"
+ [tableData]="data.row" 
+ >
+ </app-tables-standard-table>
+ <app-tables-basic-info-table *ngIf="data.controlType==='assetProfile'" [row]="data.row" [logRow]=true [rowName]="rowName"></app-tables-basic-info-table>
+ <div *ngIf="data.controlType==='dlt'" >
+   <h2 *ngIf="!data" class="text-center">
+     <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" ></span>
+   </h2>
+   <div *ngIf="data">
+     <app-member-account-dlt 
+        *ngIf="data.displayType==='wallet'||data.displayType==='fees'" 
+        [dltAccount]="data.account"
+        [displayType]="data.displayType"
+        >
+       </app-member-account-dlt>
+     <app-tables-standard-table *ngIf="data.displayType==='walletData'" 
+       [baseCols]="data.baseTableCols" 
+       [tableData]="data.tableData" 
+       (openYhdDialogEvent)="openModalDltModal(contentDlt, $event)"
+ 
+       
+       >
+       </app-tables-standard-table>
+    
+ 
+   </div>
+   
+   
+   
+ </div>
+ <div *ngIf="data.controlType==='approval'" >
+   <h2 *ngIf="!rowData" class="text-center">
+     <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" ></span>
+   </h2>
+ 
+ 
+ 
+ 
+   <app-wizards-controls-base
+   *ngIf="rowData"
+   [data]="data" 
+   [rowData]="rowData"
+   (approveRequestEvent)="approveRequest($event)"
+   (rejectRequestEvent)="openModal(contentReason, $event)"
+   (loanQuoteTrackApproveEvent)="loanQuoteTrackUpdate($event)"
+   (closeEvent)="closeDialog($event)"
+   (cancelEvent)="cancelDialog($event)"
+  >
+  </app-wizards-controls-base>
+ </div>
+ <app-dialog-controls-profile-user *ngIf="data.controlType==='userProfile'" [data]="data"></app-dialog-controls-profile-user>
+ <app-dialog-controls-operator-payouts   
+ *ngIf="data.ticketName==='Loan Repayments'||data.ticketName==='Product Payout'" 
+ [title]="data.title"
+ [data]="rowData"  
+ (closeEvent)="closeDialog($event)"
+ >
+ </app-dialog-controls-operator-payouts>
+</mat-dialog-content>
+<mat-dialog-actions>
+ <button mat-button (click)="closeDialog()">Close</button>
+</mat-dialog-actions>
+
+
+
+   
+

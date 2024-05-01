@@ -1,0 +1,38 @@
+
+
+
+<div cdkDrag cdkDragRootElement=".cdk-overlay-pane"></div>
+
+
+<h5 mat-dialog-title class="card-title" >
+ <!-- data.showTitle ||  -->
+ <span *ngIf="data.controlType!=='approval' && data.controlType!=='pricing'|| data.controlType==='details' || 
+   data.controlType==='upload'|| data.controlType==='dlt' || data.controlType==='transfer' || data.controlType==='filter' || 
+   data.controlType==='analytics' || data.controlType==='adjustments' || data.controlType==='valuations'
+ || data.controlType==='payouts'  || data.controlType==='dltMember'|| data.dialogType==='wizardBase' ||
+   data.controlType==='assetProfile'" >
+   {{data.title}}
+ </span>
+ <span *ngIf="data.controlType==='allocations'">{{data.controlType|titlecase}}: {{data.title}}</span>
+ <span *ngIf="data.controlType==='notification'">{{data.title}} <i class="fe-info" (click)="openModal(content, data.row)"></i></span>
+
+ <span *ngIf="data.controlType==='approval' && rowData" >Approve:
+   <span *ngIf="rowData.ticketName">{{rowData.ticketName}}</span>
+   <span *ngIf="!rowData.ticketName">{{data.title}}</span>
+   
+   <i class="fe-info" (click)="openModal(content, rowData)"></i>
+ </span>
+ <span *ngIf="data.controlType==='pricing'" >Approve:{{rowData.ticketName}} <i class="fe-info" (click)="openModal(content, rowData)"></i></span>
+</h5>
+
+<mat-dialog-content  >
+ 
+</mat-dialog-content>
+<mat-dialog-actions>
+ <button mat-button >Close</button>
+</mat-dialog-actions>
+
+
+
+   
+
