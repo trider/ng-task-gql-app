@@ -5,7 +5,8 @@ import { HttpLink } from 'apollo-angular/http';
 import { InMemoryCache, ApolloLink } from '@apollo/client/core';
 import { setContext } from '@apollo/client/link/context';
 
-const uri = 'http://localhost:4021';
+// const uri = 'http://localhost:4021';
+const uri = '/graphql';
 let token:string = '1111111'
 let role:string = 'user'
 

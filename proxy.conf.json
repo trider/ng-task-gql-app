@@ -1,6 +1,6 @@
 {
   "/graphql": {
-    "target": "http://127.0.0.1:4021",
+    "target": "https://5wdpfb1zg9.execute-api.us-east-1.amazonaws.com/dev",
      "secure": false,
      "changeOrigin": true,
      "pathRewrite": {
