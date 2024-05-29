@@ -49,10 +49,7 @@ export class LoginComponent implements OnInit{
 
       sessionStorage.setItem('user', JSON.stringify(resp.data['appRun']));
       this.router.navigate(['/main/home']);
-      
-     
-
-
+    
     }, (error) => {
       console.log(error);
     });
