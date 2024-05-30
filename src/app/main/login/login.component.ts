@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { UntypedFormGroup, UntypedFormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Apollo, gql, QueryRef } from 'apollo-angular';
-import { AppRun, LOGIN } from 'src/app/services/appService/schema/schema';
+import { AppRun } from 'src/app/services/appService/schema/schema';
 import { GlobalVariables } from 'src/app/common/global-variables';
 
 @Component({
@@ -35,11 +35,10 @@ export class LoginComponent implements OnInit{
 
     const payloadData:any = this.loginForm.value;
     this.apollo.mutate({
-      // mutation: AppRun,
-      mutation: LOGIN,
+      mutation: AppRun,
       variables: {
-        // api:"users",
-        // command:"login",
+        api:"users",
+        command:"login",
         payload: {
           email: payloadData.email,
           password: payloadData.password
@@ -48,13 +47,8 @@ export class LoginComponent implements OnInit{
       }
     }).subscribe((resp) => {
 
-      // sessionStorage.setItem('user', JSON.stringify(resp.data['appRun']));
-      sessionStorage.setItem('user', JSON.stringify(resp.data['login']));
+      sessionStorage.setItem('user', JSON.stringify(resp.data['appRun']));
       this.router.navigate(['/main/home']);
-      
-     
-
-
     }, (error) => {
       console.log(error);
     });

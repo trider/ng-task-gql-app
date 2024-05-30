@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Apollo, gql, QueryRef } from 'apollo-angular';
-import { AppQuery, AppRun, GET_TASKS} from 'src/app/services/appService/schema/schema';
+import { AppQuery, AppRun } from 'src/app/services/appService/schema/schema';
 import { Subscription } from 'rxjs';
 import { GlobalVariables } from 'src/app/common/global-variables';
 
@@ -37,22 +37,12 @@ export class HomeComponent implements OnInit {
   }
   ngOnInit(): void {
 
-    // this.qry = this.apollo.watchQuery<any>({
-    //   query: AppQuery,
-    //   pollInterval: 60000,
-    //   variables: {
-    //     api:"tasks",
-    //     command:"getTasks",
-    //     payload:{ 
-    //         user:"jonnygold"
-    //     }
-    //   }
-    // });
-
     this.qry = this.apollo.watchQuery<any>({
-      query: GET_TASKS,
+      query: AppQuery,
       pollInterval: 60000,
       variables: {
+        api:"tasks",
+        command:"getTasks",
         payload:{ 
             user:"jonnygold"
         }
@@ -62,8 +52,7 @@ export class HomeComponent implements OnInit {
 
 
     this.querySubscription = this.qry.valueChanges.subscribe(({ data, loading }) => {
-      // this.tasks = data.appQuery;
-      this.tasks = data.getTasks;
+      this.tasks = data.appQuery;
       console.log(this.tasks);
     }, (error) => {
   

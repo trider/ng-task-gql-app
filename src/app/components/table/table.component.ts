@@ -2,7 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { NgbModal, ModalDismissReasons, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { UntypedFormGroup, UntypedFormControl } from '@angular/forms';
 import { Apollo, gql, QueryRef } from 'apollo-angular';
-import { AppRun, CREATE_TASK, UPDATE_TASK, DELETE_TASK } from 'src/app/services/appService/schema/schema';
+import { AppRun } from 'src/app/services/appService/schema/schema';
 
 @Component({
   selector: 'app-table',
@@ -54,7 +54,7 @@ export class TableComponent implements OnInit {
     this.modalService.open(content, { size: 'sm', scrollable: true })
   }
 
-  _onSubmit(){
+  onSubmit(){
     if(this.title === "Add Task"){
       this.performAction({
         api:"tasks",
@@ -73,84 +73,37 @@ export class TableComponent implements OnInit {
       });
     }
   }
-  onSubmit(){
-    if(this.title === "Add Task"){
-      this.apollo.mutate({
-        mutation: CREATE_TASK,
-        variables: {
-          payload: this.taskForm.value
-        }
-    
-      }).subscribe((resp) => {
-        this.modalService.dismissAll();
-        location.reload();
-      }, (error) => {
-        console.log(error);
-      });
-    }
-    else if(this.title === "Edit Task"){
-      this.apollo.mutate({
-        mutation: UPDATE_TASK,
-        variables: {
-          payload: {
-            id: this.item._id,
-            data: this.taskForm.value
-          }
-        }
-    
-      }).subscribe((resp) => {
-        this.modalService.dismissAll();
-        location.reload();
-      }, (error) => {
-        console.log(error);
-      });
-    }
-  }
 
   deleteItem(item:any){
     // this.tableData = this.tableData.filter((i:any) => i !== item);
-    // this.performAction({
-    //   api:"tasks",
-    //   command:"deleteTask",
-    //   payload: {
-    //     id: item._id
-    //   }
-    // });
-    this.apollo.mutate({
-      mutation: DELETE_TASK,
-      variables: {
-        payload: {
-          id: item._id,
-        }
+    this.performAction({
+      api:"tasks",
+      command:"deleteTask",
+      payload: {
+        id: item._id
       }
-  
-    }).subscribe((resp) => {
-      this.modalService.dismissAll();
-      location.reload();
-    }, (error) => {
-      console.log(error);
     });
   }
 
-  // deleteAll(){
-  //   this.performAction({
-  //     api:"tasks",
-  //     command:"deleteAllTasks",
-  //     payload: {
-  //       user: this.user.userName
-  //     }
-  //   });
-  // }
+  deleteAll(){
+    this.performAction({
+      api:"tasks",
+      command:"deleteAllTasks",
+      payload: {
+        user: this.user.userName
+      }
+    });
+  }
 
-  // undeleteAll(){
-  //   this.performAction({
-  //     api:"tasks",
-  //     command:"unDeleteAllTasks",
-  //     payload: {
-  //       user: this.user.userName
-  //     }
-  //   });
-  // }
+  undeleteAll(){
+    this.performAction({
+      api:"tasks",
+      command:"unDeleteAllTasks",
+      payload: {
+        user: this.user.userName
+      }
+    });
+  }
 
   
 
